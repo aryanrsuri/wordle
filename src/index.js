@@ -46,7 +46,6 @@ async function init() {
   } catch (Error) {
     throw Error;
   }
-  console.log(game.solution);
 }
 
 document.addEventListener("keydown", async (key) => {
