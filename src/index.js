@@ -1,4 +1,5 @@
 const GRID = document.querySelector("div.grid");
+const KEYBOARD = document.querySelector("div.keygrid");
 const URL =
   "https://raw.githubusercontent.com/tabatkins/wordle-list/main/words";
 const client = async () => {
@@ -13,7 +14,6 @@ const client = async () => {
   }
 };
 
-
 let game = {
   current: "",
   pos: [0, 1],
@@ -23,22 +23,30 @@ let game = {
   solution: "",
 };
 
-
 async function init() {
   try {
-  const words = await client();
-  game.solution = words.split("\n")[Math.floor(Math.random() * words.split("\n").length)];
+    const words = await client();
+    game.solution =
+      words.split("\n")[Math.floor(Math.random() * words.split("\n").length)];
+
+    for (let i = 1; i < 31; i++) {
+      let box = document.createElement("div");
+      box.classList.add("box");
+      box.id = i;
+      GRID.appendChild(box);
+    }
+
+    for (let i = 0; i < 26; i++) {
+      let char = document.createElement("div");
+      char.classList.add("box");
+      char.id = String.fromCharCode(65 + i);
+      char.innerHTML = char.id;
+      KEYBOARD.appendChild(char);
+    }
   } catch (Error) {
     throw Error;
   }
-  console.log(game.solution)
-}
-
-for (let i = 1; i < 31; i++) {
-  let box = document.createElement("div");
-  box.classList.add("box");
-  box.id = i;
-  GRID.appendChild(box);
+  console.log(game.solution);
 }
 
 document.addEventListener("keydown", async (key) => {
@@ -86,6 +94,7 @@ async function render(keypress) {
 }
 
 async function evaluate() {
+  await clearOut();
   if (game.pos[1] > 30) {
     return lose();
   }
@@ -97,34 +106,39 @@ async function evaluate() {
   let wordlist = await client();
   if (wordlist.includes(game.current)) {
     if (game.current == game.solution) {
-      document.getElementById("out").innerHTML = `You won!`;
+      await writeOut(`You won! the word was ${game.current}`);
       return win();
     }
 
     for (let i in game.current) {
-      let no = parseInt(i) + 1;
-      let curr_pos = 5 * game.pos[0] + no;
+      const no = parseInt(i) + 1;
+      const curr_pos = 5 * game.pos[0] + no;
+      const charID = game.current[i].toUpperCase();
       if (game.solution.includes(game.current[i])) {
         if (game.solution[i] == game.current[i]) {
+        
           addClasstoBox(curr_pos, "correct");
+          addClasstoBox(charID, "correct");
         }
         addClasstoBox(curr_pos, "used");
+        addClasstoBox(charID, "used");
       } else {
         addClasstoBox(curr_pos, "absent");
+        addClasstoBox(charID, "absent");
       }
     }
 
     game.guesses.push(game.current);
     game.pos[0] += 1;
-
     game.current = "";
     return;
   } else {
     for (let i = game.pos[1] - 5; i < game.pos[1]; i++) {
       document.getElementById(i).innerHTML = ``;
     }
+    await writeOut(`${game.current} is not a word!`);
     game.current = "";
-    game.pos[1] = 5 * game.pos[0] + 1
+    game.pos[1] = 5 * game.pos[0] + 1;
     throw "Not a real word";
   }
 }
@@ -137,9 +151,7 @@ async function win() {
 async function lose() {
   game.status = "lost";
   clearGrid();
-  document.getElementById(
-    "out"
-  ).innerHTML = `You lost :(, the answer was ${game.solution}`;
+  await writeOut(`You lost! the word was ${game.solution}`);
 }
 
 async function addClasstoLine(_class) {
@@ -152,6 +164,11 @@ async function addClasstoBox(i, _class) {
   box.classList.add(_class);
 }
 
+async function addClasstoChar(charid, _class) {
+  let char = document.getElementById(charid);
+  char.classList.add(_class);
+}
+
 async function clearGrid() {
   for (let i = 1; i < 31; i++) {
     let box = document.getElementById(i);
@@ -159,6 +176,11 @@ async function clearGrid() {
     box.innerHTML = ``;
   }
 }
-
+async function writeOut(text) {
+  document.getElementById("out").innerHTML = text;
+}
+async function clearOut() {
+  document.getElementById("out").innerHTML = ``;
+}
 
 document.body.addEventListener("load", init());
