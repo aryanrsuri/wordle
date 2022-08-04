@@ -8,11 +8,9 @@ header.header {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    border-bottom: 2px solid black;
 }
 
-div.body {
-    margin-top: 10rem;
+div.keyboard,div.body {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,20 +25,20 @@ div.body>div.grid {
     gap: 0.75rem;
 }
 
-div.grid>div.box {
+div.box {
     width: 5rem;
     height: 5rem;
     border: 1px solid black;  
-
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2rem;
-    font-weight: 900;
+    font-weight: 700;
     text-transform: uppercase;
 }
 
 div.body>div.output {
+    padding: 1rem;
     font-size: 2rem;
     font-weight: 700;
     width: 100%;
@@ -60,4 +58,14 @@ div.body>div.output {
 
 .correct {
     background-color: green;
+}
+
+div.keyboard { 
+    padding: 1rem;
+}
+div.keyboard>div.keygrid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.75rem;
 }
