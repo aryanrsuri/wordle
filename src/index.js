@@ -86,7 +86,7 @@ async function render(keypress) {
       } catch (Error) {
         return Promise.reject(Error);
       }
-    }
+    } // [TODO] UX.1 Add a row feedback, max letters alloted 
   } else {
     throw "Not a letter!";
   }
@@ -94,43 +94,43 @@ async function render(keypress) {
 
 async function evaluate() {
   await clearOut();
-  if (game.pos[1] > 30) {
-    return lose();
-  }
-
-  if (game.guesses.includes(game.current)) {
-    throw "Word already used!";
-  }
-
   let wordlist = await client();
+  
   if (wordlist.includes(game.current)) {
-    if (game.current == game.solution) {
-      await writeOut(`You won! the word was ${game.current}`);
-      return win();
-    }
-
+    let row = [];
     for (let i in game.current) {
       const no = parseInt(i) + 1;
       const curr_pos = 5 * game.pos[0] + no;
       const charID = game.current[i].toUpperCase();
       if (game.solution.includes(game.current[i])) {
         if (game.solution[i] == game.current[i]) {
-        
+          row.push("correct");
           addClasstoBox(curr_pos, "correct");
           addClasstoBox(charID, "correct");
         }
+        row.push("used")
         addClasstoBox(curr_pos, "used");
         addClasstoBox(charID, "used");
       } else {
+        row.push("absent")
         addClasstoBox(curr_pos, "absent");
         addClasstoBox(charID, "absent");
       }
     }
-
+    
     game.guesses.push(game.current);
+    game.eval.push(row);
     game.pos[0] += 1;
     game.current = "";
-    return;
+
+    if (game.current == game.solution) {
+      await writeOut(`You won! the word was ${game.current}`);
+      return win();
+    }
+    if (game.pos[1] > 30) {
+      return lose();
+    }
+    return
   } else {
     for (let i = game.pos[1] - 5; i < game.pos[1]; i++) {
       document.getElementById(i).innerHTML = ``;
@@ -171,7 +171,7 @@ async function addClasstoChar(charid, _class) {
 async function clearGrid() {
   for (let i = 1; i < 31; i++) {
     let box = document.getElementById(i);
-    box.classList.remove("absent", "used");
+    //box.classList.remove("absent", "used");
     box.innerHTML = ``;
   }
 }
