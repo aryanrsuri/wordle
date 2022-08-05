@@ -1,7 +1,6 @@
 const GRID = document.querySelector("div.grid");
 const KEYBOARD = document.querySelector("div.keygrid");
-const URL =
-  "https://raw.githubusercontent.com/tabatkins/wordle-list/main/words";
+const URL = "https://raw.githubusercontent.com/tabatkins/wordle-list/main/words";
 const client = async () => {
   try {
     const response = await fetch(URL);
@@ -23,12 +22,22 @@ let game = {
   solution: "",
 };
 
+if (localStorage.getItem("game") === null) {
+  console.log("Item doesn't exist")
+  localStorage.setItem("game", JSON.stringify(game));
+} else {
+  game = JSON.parse(localStorage.getItem("game"))
+  renderLastSave();
+}
+
 async function init() {
   try {
+
+    
     const words = await client();
     game.solution =
       words.split("\n")[Math.floor(Math.random() * words.split("\n").length)];
-
+    localStorage.setItem("game", JSON.stringify(game));
     for (let i = 1; i < 31; i++) {
       let box = document.createElement("div");
       box.classList.add("box");
@@ -51,7 +60,10 @@ async function init() {
 document.addEventListener("keydown", async (key) => {
   await render(key);
 });
-
+async function renderLastSave() {
+  const data = JSON.parse(localStorage.getItem("game"));
+  console.log(data);
+}
 async function render(keypress) {
   if (keypress.key === "Backspace") {
     try {
@@ -81,7 +93,7 @@ async function render(keypress) {
           game.current.length - 1
         );
         game.pos[1] > 30 ? (game.pos[1] = 30) : (game.pos[1] += 1);
-
+        localStorage.setItem("game", game)
         return;
       } catch (Error) {
         return Promise.reject(Error);
@@ -130,6 +142,7 @@ async function evaluate() {
     game.guesses.push(game.current);
     game.pos[0] += 1;
     game.current = "";
+    localStorage.setItem("game", JSON.stringify(game));
     return;
   } else {
     for (let i = game.pos[1] - 5; i < game.pos[1]; i++) {
@@ -138,17 +151,20 @@ async function evaluate() {
     await writeOut(`${game.current} is not a word!`);
     game.current = "";
     game.pos[1] = 5 * game.pos[0] + 1;
+    localStorage.setItem("game", JSON.stringify(game));
     throw "Not a real word";
   }
 }
 
 async function win() {
   game.status = "won";
+  localStorage.setItem("game", JSON.stringify(game));
   await addClasstoLine("correct");
 }
 
 async function lose() {
   game.status = "lost";
+  localStorage.setItem("game", JSON.stringify(game));
   clearGrid();
   await writeOut(`You lost! the word was ${game.solution}`);
 }
