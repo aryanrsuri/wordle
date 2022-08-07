@@ -1,0 +1,16 @@
+{
+  "name": "Wordle",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/aryanrsuri/wordle.git",
+  "author": "Aryan <aryanrsuri@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.6.4",
+    "nodemon": "^2.0.19",
+    "typescript": "^4.7.4"
+  },
+  "scripts": {
+    "dev" : "nodemon tsc src/index.ts"
+  }
+}
