@@ -37,14 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 var GRID = document.querySelector("div.grid");
 var KEYBOARD = document.querySelector("div.keygrid");
-var uri = "https://raw.githubusercontent.com/tabatkins/wordle-list/main/words";
+var url = "https://gist.githubusercontent.com/aryanrsuri/d1263e4cb6f527c4c4e4c3f78134fadb/raw/0b08f0964e50b72c534571018c6ac2de60085af1/words.txt";
 var client = function () { return __awaiter(_this, void 0, void 0, function () {
     var response, Error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                return [4 /*yield*/, fetch(uri)];
+                return [4 /*yield*/, fetch(url)];
             case 1:
                 response = _a.sent();
                 if (response.status !== 200) {

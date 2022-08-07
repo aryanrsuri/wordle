@@ -1,10 +1,9 @@
 const GRID = document.querySelector("div.grid")!;
 const KEYBOARD = document.querySelector("div.keygrid")!;
-const uri =
-  "https://raw.githubusercontent.com/tabatkins/wordle-list/main/words";
+const url = "https://gist.githubusercontent.com/aryanrsuri/d1263e4cb6f527c4c4e4c3f78134fadb/raw/0b08f0964e50b72c534571018c6ac2de60085af1/words.txt";
 const client = async () => {
   try {
-    const response = await fetch(uri);
+    const response = await fetch(url);
     if (response.status !== 200) {
       throw response.status;
     }
