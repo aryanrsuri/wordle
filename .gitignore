@@ -1,4 +1,4 @@
-node_modules
-yarn.lock
-yarn-error.log
-tsconfig.json
+ui/node_modules
+ui/yarn.lock
+ui/yarn-error.log
+ui/tsconfig.json
