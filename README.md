@@ -1,5 +1,3 @@
 # Wordle clone!
 
-## This is ONLY for educational sake and no copyright infringement sought here
-
-Go to my [Personal Wordle Website](https://aryanrsuri.github.io/wordle) To try it out!
+## The site is currently not up due to new version refactoring, check back in 3 days!
